@@ -25,9 +25,16 @@ async function run() {
     const products = database.collection("products");
     const orders = database.collection("orders");
     const users = database.collection("users");
+    const reviews = database.collection("reviews");
 
     app.get("/products", async (req, res) => {
       const cursor = products.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+
+    app.get("/reviews", async (req, res) => {
+      const cursor = reviews.find({});
       const result = await cursor.toArray();
       res.json(result);
     });
@@ -65,9 +72,11 @@ async function run() {
       const query = { email: email };
       const user = await users.findOne(query);
       let isAdmin = false;
+
       if (user.role === "admin") {
         isAdmin = true;
       }
+
       res.json({ admin: isAdmin });
     });
 
@@ -77,10 +86,24 @@ async function run() {
       res.json(result);
     });
 
+    app.post("/reviews", async (req, res) => {
+      const newReview = req.body;
+
+      const result = await reviews.insertOne(newReview);
+      res.json(result);
+    });
+
     app.delete("/orders/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await orders.deleteOne(query);
+      res.json(result);
+    });
+
+    app.delete("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await products.deleteOne(query);
       res.json(result);
     });
 
