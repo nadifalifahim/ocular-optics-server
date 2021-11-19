@@ -32,8 +32,16 @@ async function run() {
       res.json(result);
     });
 
-    app.get("/my-orders", async (req, res) => {
+    app.get("/all-orders", async (req, res) => {
       const cursor = orders.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+
+    app.get("/my-orders/:email", async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const cursor = orders.find(filter);
       const result = await cursor.toArray();
       res.json(result);
     });
@@ -50,6 +58,17 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const result = await products.findOne(query);
       res.json(result);
+    });
+
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await users.findOne(query);
+      let isAdmin = false;
+      if (user.role === "admin") {
+        isAdmin = true;
+      }
+      res.json({ admin: isAdmin });
     });
 
     app.post("/add-new-product", async (req, res) => {
@@ -87,16 +106,27 @@ async function run() {
     app.post("/users", async (req, res) => {
       const newUser = req.body;
       console.log(newUser);
-      const result = await users.insertOne(newOrder);
+      const result = await users.insertOne(newUser);
       res.json(result);
     });
 
     app.put("/users", async (req, res) => {
       const user = req.body;
+      console.log(user);
       const filter = { email: user.email };
       const options = { upsert: true };
       const updateDoc = { $set: user };
-      const result = await userCollection.updateOne(filter, updateDoc, options);
+      const result = await users.updateOne(filter, updateDoc, options);
+      res.json(result);
+    });
+
+    app.put("/admin", async (req, res) => {
+      const email = req.body;
+      console.log(email);
+      const filter = { email: email.adminEmail };
+      const options = { upsert: true };
+      const updateDoc = { $set: { role: "admin" } };
+      const result = await users.updateOne(filter, updateDoc, options);
       res.json(result);
     });
   } finally {
