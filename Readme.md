@@ -1,11 +1,14 @@
-# Ocular Optical Store
+# OCULAR OPTICS
 
-Live site link: https://ocular-optics.web.app
+### OPTICAL ACCESSORIES SELLING WEBSITE
 
-Sunglass selling website
+### Live site link: https://ocular-optics.web.app
 
-- Fullstack website
-- Integrated with mongodb
-- Uses Firebase authentication
-- Uses react router v5
-- Contains dashboard
+#### Technologies: React, React Router, Node.js, MongoDB, Firebase, Heroku, Git
+
+#### Description:
+
+- Fully responsive optical accessories selling website developed using MERN stack
+- Contains a dashboard for users
+- Admins can add and manage products
+
